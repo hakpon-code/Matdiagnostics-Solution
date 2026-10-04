@@ -1,6 +1,6 @@
 // ====== 1) Collez ici les infos de votre projet Supabase (voir LISEZMOI.md) ======
-const SUPABASE_URL = 'ktikioeudhiijtfcycwc';
-const SUPABASE_ANON_KEY = 'eu-west-1';
+const SUPABASE_URL = 'https://ktikioeudhiijtfcycwc.supabase.co/rest/v1/';
+const SUPABASE_ANON_KEY = 'sb_publishable_8ESqBa375RwiYoPnjYB6EA_pN47snAS';
 
 // ====== 2) Vos services et prix (en FCFA) ======
 const SERVICES = [
