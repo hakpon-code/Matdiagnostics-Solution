@@ -19,8 +19,10 @@ button{padding:10px 16px;cursor:pointer}a{color:#0b3d91;cursor:pointer}.err{colo
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const $ = id => document.getElementById(id);
 async function load(){
+  const {data:{session}} = await sb.auth.getSession();
+  if (!session) { $('login').hidden = false; $('app').hidden = true; return; }
   const {data, error} = await sb.from('clients').select('*').order('created_at', {ascending:false});
-  if (error) { $('login').hidden = false; $('app').hidden = true; $('e').textContent = 'Accès refusé. Reconnectez-vous.'; return; }
+  if (error) { $('login').hidden = false; $('app').hidden = true; $('e').textContent = 'Erreur : ' + error.message; return; }
   $('login').hidden = true; $('app').hidden = false; $('t').textContent = data.length;
   const L = $('list'); L.innerHTML = '';
   data.forEach((r, i) => {
@@ -34,7 +36,7 @@ async function load(){
 }
 $('b').onclick = async () => {
   const {error} = await sb.auth.signInWithPassword({email: $('em').value.trim(), password: $('pw').value});
-  if (error) $('e').textContent = 'Email ou mot de passe incorrect.'; else load();
+  if (error) $('e').textContent = 'Connexion impossible : ' + error.message; else load();
 };
 $('rf').onclick = load;
 $('lo').onclick = async () => { await sb.auth.signOut(); location.reload(); };
