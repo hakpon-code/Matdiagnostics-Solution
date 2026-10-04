@@ -1,6 +1,6 @@
 // ====== 1) Collez ici les infos de votre projet Supabase (voir LISEZMOI.md) ======
-const SUPABASE_URL = 'https://VOTRE-PROJET.supabase.co';
-const SUPABASE_ANON_KEY = 'VOTRE_CLE_ANON_PUBLIQUE';
+const SUPABASE_URL = 'https://Matdiagnostics.supabase.co';
+const SUPABASE_ANON_KEY = 'ktikioeudhiijtfcycwc';
 
 // ====== 2) Vos services et prix (en FCFA) ======
 const SERVICES = [
