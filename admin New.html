@@ -1,0 +1,126 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Clients inscrits — MatDiagnostics</title>
+<style>
+*{box-sizing:border-box}body{font-family:system-ui,Arial,sans-serif;background:#f3f6fb;color:#1b2a41;margin:0;padding:18px}
+h2{margin:0;color:#0b3d91}.err{color:#b00;min-height:1.2em}
+#login{max-width:340px;margin:70px auto;background:#fff;padding:22px;border-radius:12px;box-shadow:0 2px 10px #0001}
+#login input{width:100%;padding:10px;margin-bottom:10px;border:1px solid #c5cfdf;border-radius:8px;font-size:1rem}
+button{padding:9px 14px;border:0;border-radius:8px;cursor:pointer;font-size:.95rem;background:#0b3d91;color:#fff}
+button.sec{background:#e4e9f3;color:#1b2a41}button.del{background:#c62828}button:disabled{opacity:.5;cursor:default}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.tools input{padding:9px;border:1px solid #c5cfdf;border-radius:8px;min-width:220px;flex:1;max-width:340px}
+.wrap{overflow-x:auto;background:#fff;border-radius:12px;box-shadow:0 2px 10px #0001}
+table{border-collapse:collapse;width:100%;min-width:760px}
+th{background:#0b3d91;color:#fff;text-align:left;padding:11px 10px;font-size:.9rem;white-space:nowrap}
+td{padding:10px;border-bottom:1px solid #e6ebf4;font-size:.93rem;vertical-align:top}
+tr:nth-child(even) td{background:#f8faff}tr:hover td{background:#eef3ff}
+.num{font-weight:700;color:#0b3d91}.prix{white-space:nowrap;font-weight:600}.dt{white-space:nowrap;color:#52607a}
+.empty{padding:26px;text-align:center;color:#52607a}#info{margin:10px 2px;color:#52607a;font-size:.9rem}
+</style></head><body>
+
+<div id="login"><h2>Espace MatDiagnostics</h2><p class="err" id="e"></p>
+<input id="em" type="email" placeholder="Email admin" autocomplete="username">
+<input id="pw" type="password" placeholder="Mot de passe" autocomplete="current-password">
+<button id="b" style="width:100%">Entrer</button></div>
+
+<div id="app" hidden>
+  <div class="top"><h2>Clients inscrits (<span id="t">0</span>)</h2>
+    <div><button class="sec" id="rf">Actualiser</button> <button class="sec" id="lo">Déconnexion</button></div></div>
+  <div class="tools">
+    <input id="q" type="search" placeholder="Rechercher (nom, téléphone, adresse, service)…">
+    <button class="del" id="ds" disabled>Supprimer la sélection (0)</button>
+  </div>
+  <div class="wrap"><table>
+    <thead><tr><th><input type="checkbox" id="all" title="Tout sélectionner"></th><th>N°</th><th>Inscrit le</th><th>Nom et prénoms</th><th>Téléphone</th><th>Adresse</th><th>Service</th><th>Prix</th><th></th></tr></thead>
+    <tbody id="tb"></tbody></table><div class="empty" id="empty" hidden>Aucun client à afficher.</div></div>
+  <div id="info"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const $ = id => document.getElementById(id);
+let rows = [], selected = new Set();
+const fmtDate = d => new Date(d).toLocaleString('fr-FR', {timeZone:'Africa/Porto-Novo', dateStyle:'short', timeStyle:'short'});
+const cell = (tr, txt, cls) => { const td = document.createElement('td'); if (cls) td.className = cls; td.textContent = txt; tr.appendChild(td); return td; };
+
+function showLogin(msg){ $('login').hidden = false; $('app').hidden = true; $('e').textContent = msg || ''; }
+
+async function load(){
+  const {data:{session}} = await sb.auth.getSession();
+  if (!session) return showLogin();
+  const {data, error} = await sb.from('clients').select('*').order('created_at', {ascending:false});
+  if (error) return showLogin('Erreur : ' + error.message);
+  rows = data; selected.clear();
+  $('login').hidden = true; $('app').hidden = false;
+  render();
+}
+
+function render(){
+  const q = $('q').value.trim().toLowerCase();
+  const total = rows.length;
+  $('t').textContent = total;
+  const tb = $('tb'); tb.innerHTML = '';
+  let shown = 0;
+  rows.forEach((r, i) => {
+    const hay = [r.nom, r.telephone, r.adresse, r.service].join(' ').toLowerCase();
+    if (q && !hay.includes(q)) return;
+    shown++;
+    const tr = document.createElement('tr');
+    const tdc = document.createElement('td'); const cb = document.createElement('input'); cb.type = 'checkbox';
+    cb.checked = selected.has(r.id);
+    cb.onchange = () => { cb.checked ? selected.add(r.id) : selected.delete(r.id); updSel(); };
+    tdc.appendChild(cb); tr.appendChild(tdc);
+    cell(tr, total - i, 'num'); cell(tr, fmtDate(r.created_at), 'dt');
+    cell(tr, r.nom); cell(tr, r.telephone); cell(tr, r.adresse); cell(tr, r.service);
+    cell(tr, fmtPrice(r.prix), 'prix');
+    const tdd = document.createElement('td'); const bt = document.createElement('button');
+    bt.className = 'del'; bt.textContent = 'Supprimer';
+    bt.onclick = () => remove([r.id], 'Supprimer le client « ' + r.nom + ' » ?');
+    tdd.appendChild(bt); tr.appendChild(tdd); tb.appendChild(tr);
+  });
+  $('empty').hidden = shown > 0;
+  $('info').textContent = shown + ' client(s) affiché(s) sur ' + total + '.';
+  updSel();
+}
+
+function updSel(){
+  $('ds').textContent = 'Supprimer la sélection (' + selected.size + ')';
+  $('ds').disabled = selected.size === 0;
+  const boxes = [...document.querySelectorAll('#tb input[type=checkbox]')];
+  $('all').checked = boxes.length > 0 && boxes.every(c => c.checked);
+}
+
+async function remove(ids, question){
+  if (!confirm(question + '\nCette action est définitive.')) return;
+  const {data, error} = await sb.from('clients').delete().in('id', ids).select('id');
+  if (error) return alert('Erreur : ' + error.message);
+  if (!data || data.length === 0) return alert("Rien n'a été supprimé. Relancez le script des règles (policies) dans Supabase.");
+  rows = rows.filter(r => !ids.includes(r.id)); ids.forEach(i => selected.delete(i));
+  render();
+}
+
+$('ds').onclick = () => remove([...selected], 'Supprimer ' + selected.size + ' client(s) sélectionné(s) ?');
+$('all').onchange = e => {
+  document.querySelectorAll('#tb tr').forEach((tr, idx) => {});
+  const q = $('q').value.trim().toLowerCase();
+  rows.forEach(r => {
+    const hay = [r.nom, r.telephone, r.adresse, r.service].join(' ').toLowerCase();
+    if (!q || hay.includes(q)) e.target.checked ? selected.add(r.id) : selected.delete(r.id);
+  });
+  render();
+};
+$('q').oninput = render;
+$('rf').onclick = load;
+$('lo').onclick = async () => { await sb.auth.signOut(); location.reload(); };
+$('b').onclick = async () => {
+  $('e').textContent = '';
+  const {error} = await sb.auth.signInWithPassword({email: $('em').value.trim(), password: $('pw').value});
+  if (error) $('e').textContent = 'Connexion impossible : ' + error.message; else load();
+};
+$('pw').addEventListener('keydown', e => { if (e.key === 'Enter') $('b').click(); });
+load();
+</script></body></html>
