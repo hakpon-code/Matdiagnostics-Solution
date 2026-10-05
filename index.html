@@ -27,6 +27,13 @@ button:disabled{opacity:.6}
 .geoMsg{font-size:.85rem;margin:6px 0 0;color:#52607a}
 .geoMsg.ok{color:#14692b}
 .geoMsg.ko{color:#9b1c1c}
+.grp{font-weight:700;color:#0b3d91;margin:14px 0 4px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid #c5cfdf;border-radius:8px;margin:6px 0;cursor:pointer;font-weight:400}
+.opt input{width:auto;padding:0;margin-top:3px}
+.opt .pr{margin-left:auto;white-space:nowrap;font-weight:700;color:#0b3d91}
+.opt.on{background:#dcfce7;border-color:#16a34a;color:#14532d}
+.opt.on .pr{color:#15803d}
+.opt input{accent-color:#16a34a}
 .delivery{max-width:980px;margin:34px auto;padding:22px;background:linear-gradient(135deg,#0f7a3d,#22c55e);color:#fff;border-radius:16px;text-align:center;box-shadow:0 2px 10px #0002}
 .delivery h3{margin:0 0 8px;font-size:1.25rem}
 .delivery p{margin:0;opacity:.95;line-height:1.5}
@@ -59,8 +66,8 @@ button:disabled{opacity:.6}
   <p id="geoMsg" class="geoMsg"></p>
   <input type="hidden" name="latitude">
   <input type="hidden" name="longitude">
-  <label>Service souhaité</label>
-  <select name="service" id="service" required><option value="">— Choisissez un service —</option></select>
+  <label>Services souhaités <small style="font-weight:400;color:#52607a">(vous pouvez en cocher plusieurs)</small></label>
+  <div id="services"></div>
   <input class="hp" name="website" tabindex="-1" autocomplete="off">
   <button id="go" type="submit">Envoyer ma demande</button>
 </form></section>
@@ -90,40 +97,48 @@ geoBtn.addEventListener('click', () => {
     geoBtn.disabled = false;
   }, {enableHighAccuracy:true, timeout:10000});
 });
-const sel = document.getElementById('service'), out = document.getElementById('prix'), msg = document.getElementById('msg');
+const box = document.getElementById('services'), out = document.getElementById('prix'), msg = document.getElementById('msg');
 const groups = {};
 SERVICES.forEach(s => (groups[s.group] = groups[s.group] || []).push(s));
 for (const g in groups) {
-  const og = document.createElement('optgroup'); og.label = g;
-  groups[g].forEach(s => { const o = document.createElement('option'); o.value = s.key; o.textContent = s.label; og.appendChild(o); });
-  sel.appendChild(og);
+  const t = document.createElement('div'); t.className = 'grp'; t.textContent = g; box.appendChild(t);
+  groups[g].forEach(s => {
+    const l = document.createElement('label'); l.className = 'opt';
+    const c = document.createElement('input'); c.type = 'checkbox'; c.value = s.key; c.name = 'svc';
+    const n = document.createElement('span'); n.textContent = s.label;
+    const p = document.createElement('span'); p.className = 'pr'; p.textContent = fmtPrice(s.price);
+    l.append(c, n, p); box.appendChild(l);
+  });
 }
+function chosen(){ return [...box.querySelectorAll('input:checked')].map(c => SERVICES.find(x => x.key === c.value)); }
+function upd(){
+  box.querySelectorAll('.opt').forEach(l => l.classList.toggle('on', l.querySelector('input').checked));
+  out.textContent = fmtPrice(chosen().reduce((a, s) => a + s.price, 0));
+}
+box.addEventListener('change', upd);
 (groups['Packs'] || []).forEach(s => {
   const d = document.createElement('div'); d.className = 'card pack' + (s.key === 'pack_premium' ? ' top' : '');
   const h = document.createElement('h3'); h.textContent = s.label;
   const p = document.createElement('div'); p.className = 'p'; p.textContent = fmtPrice(s.price);
   d.append(h, p); document.getElementById('packs').appendChild(d);
 });
-sel.addEventListener('change', () => {
-  const s = SERVICES.find(x => x.key === sel.value);
-  out.textContent = fmtPrice(s ? s.price : 0);
-});
 function show(cls, t){ msg.innerHTML = ''; const d = document.createElement('div'); d.className = cls; d.textContent = t; msg.appendChild(d); }
 document.getElementById('f').addEventListener('submit', async e => {
   e.preventDefault();
   const f = e.target; if (f.website.value) return;
-  const s = SERVICES.find(x => x.key === f.service.value);
-  if (!s) return show('ko', 'Veuillez choisir un service.');
+  const list = chosen();
+  if (!list.length) return show('ko', 'Veuillez cocher au moins un service.');
+  const total = list.reduce((a, s) => a + s.price, 0);
   const btn = document.getElementById('go'); btn.disabled = true;
   try {
     const r = await fetch(SUPABASE_URL + '/rest/v1/clients', {
       method: 'POST',
       headers: Object.assign({'Content-Type':'application/json', apikey: SUPABASE_ANON_KEY, Prefer: 'return=minimal'}, SUPABASE_ANON_KEY.startsWith('sb_') ? {} : {Authorization: 'Bearer ' + SUPABASE_ANON_KEY}),
-      body: JSON.stringify({nom: f.nom.value.trim(), telephone: f.tel.value.trim(), adresse: f.adresse.value.trim(), service: s.label, prix: s.price, latitude: f.latitude.value ? Number(f.latitude.value) : null, longitude: f.longitude.value ? Number(f.longitude.value) : null})
+      body: JSON.stringify({nom: f.nom.value.trim(), telephone: f.tel.value.trim(), adresse: f.adresse.value.trim(), service: list.map(s => s.label).join(' + '), prix: total, latitude: f.latitude.value ? Number(f.latitude.value) : null, longitude: f.longitude.value ? Number(f.longitude.value) : null})
     });
     if (!r.ok) { const t = await r.text(); throw new Error('Erreur ' + r.status + ' : ' + t.slice(0,250)); }
     show('ok', 'Merci ! Votre demande a bien été enregistrée. Nous vous contacterons très vite.');
-    f.reset(); out.textContent = fmtPrice(0); geoMsg.textContent = '';
+    f.reset(); upd(); geoMsg.textContent = '';
   } catch (err) { show('ko', "Impossible d'envoyer la demande. Détail technique : " + err.message); }
   btn.disabled = false;
 });
