@@ -1,133 +1,376 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><title>Clients inscrits — MatDiagnostics</title>
-<style>
-*{box-sizing:border-box}body{font-family:system-ui,Arial,sans-serif;background:#f3f6fb;color:#1b2a41;margin:0;padding:18px}
-h2{margin:0;color:#0b3d91}.err{color:#b00;min-height:1.2em}
-#login{max-width:340px;margin:70px auto;background:#fff;padding:22px;border-radius:12px;box-shadow:0 2px 10px #0001}
-#login input{width:100%;padding:10px;margin-bottom:10px;border:1px solid #c5cfdf;border-radius:8px;font-size:1rem}
-button{padding:9px 14px;border:0;border-radius:8px;cursor:pointer;font-size:.95rem;background:#0b3d91;color:#fff}
-button.sec{background:#e4e9f3;color:#1b2a41}button.del{background:#c62828}button:disabled{opacity:.5;cursor:default}
-.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
-.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
-.tools input{padding:9px;border:1px solid #c5cfdf;border-radius:8px;min-width:220px;flex:1;max-width:340px}
-.wrap{overflow-x:auto;background:#fff;border-radius:12px;box-shadow:0 2px 10px #0001}
-table{border-collapse:collapse;width:100%;min-width:760px}
-th{background:#0b3d91;color:#fff;text-align:left;padding:11px 10px;font-size:.9rem;white-space:nowrap}
-td{padding:10px;border-bottom:1px solid #e6ebf4;font-size:.93rem;vertical-align:top}
-tr:nth-child(even) td{background:#f8faff}tr:hover td{background:#eef3ff}
-.num{font-weight:700;color:#0b3d91}.prix{white-space:nowrap;font-weight:600}.dt{white-space:nowrap;color:#52607a}
-.empty{padding:26px;text-align:center;color:#52607a}#info{margin:10px 2px;color:#52607a;font-size:.9rem}
-</style></head><body>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Administration - MD Solutions</title>
+  <link rel="icon" href="logo-md.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0b3c5d;
+      --teal: #1aa3b5;
+      --green: #2fa37a;
+      --yellow: #ffd21f;
+      --red: #c0392b;
+      --bg: #eef5f8;
+      --text: #10283a;
+    }
 
-<div id="login"><h2>Espace MatDiagnostics</h2><p class="err" id="e"></p>
-<input id="em" type="email" placeholder="Email admin" autocomplete="username">
-<input id="pw" type="password" placeholder="Mot de passe" autocomplete="current-password">
-<button id="b" style="width:100%">Entrer</button></div>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden], .hidden { display: none !important; }
 
-<div id="app" hidden>
-  <div class="top"><h2>Clients inscrits (<span id="t">0</span>)</h2>
-    <div><button class="sec" id="rf">Actualiser</button> <button class="sec" id="lo">Déconnexion</button></div></div>
-  <div class="tools">
-    <input id="q" type="search" placeholder="Rechercher (nom, téléphone, adresse, service)…">
-    <button class="del" id="ds" disabled>Supprimer la sélection (0)</button>
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--navy);
+      color: #fff;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    header h1 { font-size: 1.05rem; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+    /* ---------- Connexion ---------- */
+    .login-box {
+      max-width: 380px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 28px;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .login-box h2 { color: var(--navy); margin-bottom: 14px; font-size: 1.2rem; }
+
+    label { display: block; font-weight: 600; font-size: 0.85rem; margin: 12px 0 6px; color: var(--navy); }
+
+    input, select {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 10px 12px;
+      border: 2px solid #cfe3ec;
+      border-radius: 9px;
+      background: #fff;
+    }
+
+    button, .btn {
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 18px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary { background: var(--navy); color: #fff; width: 100%; margin-top: 18px; }
+    .btn-out { background: #e3edf2; color: var(--navy); }
+    .btn-wa { background: #25d366; color: #fff; padding: 9px 16px; }
+
+    .error { color: var(--red); font-size: 0.85rem; margin-top: 10px; min-height: 1em; }
+
+    /* ---------- Liste ---------- */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .stats { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .stats span {
+      background: #fff;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .filters { display: flex; gap: 10px; }
+    .filters select { width: auto; }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      border-left: 6px solid var(--teal);
+    }
+
+    .card.nouvelle { border-left-color: var(--yellow); }
+    .card.terminee { border-left-color: var(--green); opacity: 0.7; }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: baseline;
+    }
+
+    .card h3 { color: var(--navy); font-size: 1rem; }
+    .meta { font-size: 0.8rem; color: #5a7282; }
+
+    .details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 8px 16px;
+      margin-top: 12px;
+      font-size: 0.9rem;
+    }
+
+    .details b { color: var(--navy); }
+    .details a { color: var(--teal); }
+
+    .desc {
+      margin-top: 12px;
+      background: #f5f9fb;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    .actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .actions select { width: auto; }
+
+    @media (max-width: 600px) {
+      .container { padding: 14px; }
+      .filters { width: 100%; }
+      .filters select { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Connexion -->
+  <div id="login-view">
+    <div class="login-box">
+      <h2>Connexion administrateur</h2>
+      <form id="login-form">
+        <label for="email">Email</label>
+        <input type="email" id="email" required autocomplete="username">
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" required autocomplete="current-password">
+        <button type="submit" class="btn-primary">Se connecter</button>
+        <div class="error" id="login-error"></div>
+      </form>
+    </div>
   </div>
-  <div class="wrap"><table>
-    <thead><tr><th><input type="checkbox" id="all" title="Tout sélectionner"></th><th>N°</th><th>Inscrit le</th><th>Nom et prénoms</th><th>Téléphone</th><th>Adresse</th><th>Carte</th><th>Service</th><th>Prix</th><th></th></tr></thead>
-    <tbody id="tb"></tbody></table><div class="empty" id="empty" hidden>Aucun client à afficher.</div></div>
-  <div id="info"></div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script>
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const $ = id => document.getElementById(id);
-let rows = [], selected = new Set();
-const fmtDate = d => new Date(d).toLocaleString('fr-FR', {timeZone:'Africa/Porto-Novo', dateStyle:'short', timeStyle:'short'});
-const cell = (tr, txt, cls) => { const td = document.createElement('td'); if (cls) td.className = cls; td.textContent = txt; tr.appendChild(td); return td; };
+  <!-- Tableau de bord -->
+  <div id="admin-view" hidden>
+    <header>
+      <h1>MD Solutions · Demandes de service</h1>
+      <button class="btn-out" id="logout-btn">Se déconnecter</button>
+    </header>
 
-function showLogin(msg){ $('login').hidden = false; $('app').hidden = true; $('e').textContent = msg || ''; }
+    <div class="container">
+      <div class="toolbar">
+        <div class="stats">
+          <span id="count-total">0 demande</span>
+          <span id="count-new">0 nouvelle</span>
+        </div>
+        <div class="filters">
+          <select id="filter">
+            <option value="toutes">Toutes</option>
+            <option value="nouvelle">Nouvelles</option>
+            <option value="en cours">En cours</option>
+            <option value="terminee">Terminées</option>
+          </select>
+          <button class="btn-out" id="refresh-btn">Actualiser</button>
+        </div>
+      </div>
 
-async function load(){
-  const {data:{session}} = await sb.auth.getSession();
-  if (!session) return showLogin();
-  const {data, error} = await sb.from('clients').select('*').order('created_at', {ascending:false});
-  if (error) return showLogin('Erreur : ' + error.message);
-  rows = data; selected.clear();
-  $('login').hidden = true; $('app').hidden = false;
-  render();
-}
+      <div class="error" id="list-error"></div>
+      <div id="list"></div>
+    </div>
+  </div>
 
-function render(){
-  const q = $('q').value.trim().toLowerCase();
-  const total = rows.length;
-  $('t').textContent = total;
-  const tb = $('tb'); tb.innerHTML = '';
-  let shown = 0;
-  rows.forEach((r, i) => {
-    const hay = [r.nom, r.telephone, r.adresse, r.service].join(' ').toLowerCase();
-    if (q && !hay.includes(q)) return;
-    shown++;
-    const tr = document.createElement('tr');
-    const tdc = document.createElement('td'); const cb = document.createElement('input'); cb.type = 'checkbox';
-    cb.checked = selected.has(r.id);
-    cb.onchange = () => { cb.checked ? selected.add(r.id) : selected.delete(r.id); updSel(); };
-    tdc.appendChild(cb); tr.appendChild(tdc);
-    cell(tr, total - i, 'num'); cell(tr, fmtDate(r.created_at), 'dt');
-    cell(tr, r.nom); cell(tr, r.telephone); cell(tr, r.adresse);
-    const tdm = document.createElement('td');
-    if (r.latitude != null && r.longitude != null) {
-      const a2 = document.createElement('a'); a2.href = 'https://www.google.com/maps?q=' + r.latitude + ',' + r.longitude; a2.target = '_blank'; a2.rel = 'noopener'; a2.textContent = '📍 Voir sur la carte';
-      tdm.appendChild(a2);
-    } else { tdm.textContent = '—'; tdm.style.color = '#9aa6bb'; }
-    tr.appendChild(tdm);
-    cell(tr, r.service);
-    cell(tr, fmtPrice(r.prix), 'prix');
-    const tdd = document.createElement('td'); const bt = document.createElement('button');
-    bt.className = 'del'; bt.textContent = 'Supprimer';
-    bt.onclick = () => remove([r.id], 'Supprimer le client « ' + r.nom + ' » ?');
-    tdd.appendChild(bt); tr.appendChild(tdd); tb.appendChild(tr);
-  });
-  $('empty').hidden = shown > 0;
-  $('info').textContent = shown + ' client(s) affiché(s) sur ' + total + '.';
-  updSel();
-}
+  <script>
+    const SUPABASE_URL = "https://ktikioeudhiijtfcycwc.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_8ESqBa375RwiYoPnjYB6EA_pN47snAS";
+    const TABLE_URL = SUPABASE_URL + "/rest/v1/demandes_service";
+    const STATUTS = [
+      { value: "nouvelle", label: "Nouvelle" },
+      { value: "en cours", label: "En cours" },
+      { value: "terminee", label: "Terminée" }
+    ];
 
-function updSel(){
-  $('ds').textContent = 'Supprimer la sélection (' + selected.size + ')';
-  $('ds').disabled = selected.size === 0;
-  const boxes = [...document.querySelectorAll('#tb input[type=checkbox]')];
-  $('all').checked = boxes.length > 0 && boxes.every(c => c.checked);
-}
+    let accessToken = null;
+    let demandes = [];
 
-async function remove(ids, question){
-  if (!confirm(question + '\nCette action est définitive.')) return;
-  const {data, error} = await sb.from('clients').delete().in('id', ids).select('id');
-  if (error) return alert('Erreur : ' + error.message);
-  if (!data || data.length === 0) return alert("Rien n'a été supprimé. Relancez le script des règles (policies) dans Supabase.");
-  rows = rows.filter(r => !ids.includes(r.id)); ids.forEach(i => selected.delete(i));
-  render();
-}
+    const $ = (id) => document.getElementById(id);
 
-$('ds').onclick = () => remove([...selected], 'Supprimer ' + selected.size + ' client(s) sélectionné(s) ?');
-$('all').onchange = e => {
-  document.querySelectorAll('#tb tr').forEach((tr, idx) => {});
-  const q = $('q').value.trim().toLowerCase();
-  rows.forEach(r => {
-    const hay = [r.nom, r.telephone, r.adresse, r.service].join(' ').toLowerCase();
-    if (!q || hay.includes(q)) e.target.checked ? selected.add(r.id) : selected.delete(r.id);
-  });
-  render();
-};
-$('q').oninput = render;
-$('rf').onclick = load;
-$('lo').onclick = async () => { await sb.auth.signOut(); location.reload(); };
-$('b').onclick = async () => {
-  $('e').textContent = '';
-  const {error} = await sb.auth.signInWithPassword({email: $('em').value.trim(), password: $('pw').value});
-  if (error) $('e').textContent = 'Connexion impossible : ' + error.message; else load();
-};
-$('pw').addEventListener('keydown', e => { if (e.key === 'Enter') $('b').click(); });
-load();
-</script></body></html>
+    function esc(s) {
+      return String(s ?? "").replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
+    }
+
+    function authHeaders(extra = {}) {
+      return Object.assign({
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + accessToken,
+        "Content-Type": "application/json"
+      }, extra);
+    }
+
+    // Transforme un numéro en lien WhatsApp (sans le +, indicatif 229 du Bénin si absent)
+    function waLink(phone) {
+      let p = String(phone).replace(/\D/g, "");
+      if (p.startsWith("00")) p = p.slice(2);
+      else if (!p.startsWith("229") && p.startsWith("0")) p = "229" + p.slice(1);
+      else if (!p.startsWith("229")) p = "229" + p;
+      return "https://wa.me/" + p;
+    }
+
+    async function login(e) {
+      e.preventDefault();
+      $("login-error").textContent = "";
+
+      const res = await fetch(SUPABASE_URL + "/auth/v1/token?grant_type=password", {
+        method: "POST",
+        headers: { "apikey": SUPABASE_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ email: $("email").value.trim(), password: $("password").value })
+      });
+
+      if (!res.ok) {
+        $("login-error").textContent = "Email ou mot de passe incorrect.";
+        return;
+      }
+
+      const data = await res.json();
+      accessToken = data.access_token;
+      $("password").value = "";
+      $("login-view").hidden = true;
+      $("admin-view").hidden = false;
+      await loadDemandes();
+    }
+
+    async function loadDemandes() {
+      $("list-error").textContent = "";
+      $("list").innerHTML = "<p>Chargement...</p>";
+
+      const res = await fetch(TABLE_URL + "?select=*&order=created_at.desc", {
+        headers: authHeaders()
+      });
+
+      if (!res.ok) {
+        $("list").innerHTML = "";
+        $("list-error").textContent = "Impossible de charger les demandes. Reconnectez-vous si le problème continue.";
+        return;
+      }
+
+      demandes = await res.json();
+      render();
+    }
+
+    function render() {
+      const filtre = $("filter").value;
+      const liste = demandes.filter((d) => filtre === "toutes" || d.statut === filtre);
+
+      $("count-total").textContent = demandes.length + " demande(s)";
+      $("count-new").textContent = demandes.filter((d) => d.statut === "nouvelle").length + " nouvelle(s)";
+
+      if (!liste.length) {
+        $("list").innerHTML = "<p>Aucune demande pour ce filtre.</p>";
+        return;
+      }
+      $("list").innerHTML = liste.map(cardHTML).join("");
+    }
+
+    function cardHTML(d) {
+      const date = new Date(d.created_at).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" });
+      const gps = (d.latitude != null && d.longitude != null)
+        ? `<a href="https://www.google.com/maps?q=${d.latitude},${d.longitude}" target="_blank" rel="noopener">Voir sur la carte</a>`
+        : "Non partagée";
+
+      const options = STATUTS.map((s) =>
+        `<option value="${s.value}" ${d.statut === s.value ? "selected" : ""}>${s.label}</option>`
+      ).join("");
+
+      return `
+        <div class="card ${esc(d.statut)}">
+          <div class="card-head">
+            <h3>${esc(d.nom)} · ${esc(d.service)}</h3>
+            <span class="meta">Reçue le ${esc(date)}</span>
+          </div>
+
+          <div class="details">
+            <div><b>Téléphone :</b> ${esc(d.telephone)}</div>
+            <div><b>Email :</b> ${esc(d.email || "—")}</div>
+            <div><b>Date souhaitée :</b> ${esc(d.date_souhaitee || "—")}</div>
+            <div><b>Adresse :</b> ${esc(d.adresse || "—")}</div>
+            <div><b>Position GPS :</b> ${gps}</div>
+          </div>
+
+          <div class="desc">${esc(d.description)}</div>
+
+          <div class="actions">
+            <a class="btn btn-wa" href="${waLink(d.telephone)}" target="_blank" rel="noopener">💬 Ouvrir WhatsApp</a>
+            <select onchange="changerStatut(${Number(d.id)}, this.value)">${options}</select>
+          </div>
+        </div>`;
+    }
+
+    async function changerStatut(id, statut) {
+      const res = await fetch(TABLE_URL + "?id=eq." + id, {
+        method: "PATCH",
+        headers: authHeaders({ "Prefer": "return=minimal" }),
+        body: JSON.stringify({ statut: statut })
+      });
+
+      if (!res.ok) {
+        alert("Mise à jour impossible. Reconnectez-vous et réessayez.");
+        return;
+      }
+
+      const d = demandes.find((x) => x.id === id);
+      if (d) d.statut = statut;
+      render();
+    }
+
+    function logout() {
+      accessToken = null;
+      location.reload();
+    }
+
+    $("login-form").addEventListener("submit", login);
+    $("logout-btn").addEventListener("click", logout);
+    $("refresh-btn").addEventListener("click", loadDemandes);
+    $("filter").addEventListener("change", render);
+  </script>
+</body>
+</html>

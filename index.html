@@ -256,7 +256,7 @@
     .form-actions { margin-top: 22px; text-align: center; }
 
     .btn-submit {
-      background: #25d366;
+      background: var(--navy);
       color: var(--white);
       font-size: 1.05rem;
       padding: 14px 30px;
@@ -306,6 +306,64 @@
     .whatsapp-btn:hover { transform: scale(1.05); }
 
     footer { text-align: center; color: var(--cyan); font-size: 0.85rem; margin-top: 30px; }
+
+    .success-box {
+      text-align: center;
+      padding: 24px;
+      border-radius: 14px;
+      background: rgba(47, 163, 122, 0.12);
+      border: 2px solid var(--green);
+      color: var(--navy);
+    }
+
+    .success-box h3 { font-size: 1.15rem; margin-bottom: 8px; }
+    .success-box p { font-size: 0.95rem; line-height: 1.5; }
+
+    .services-group { border: none; margin: 0; padding: 0; min-width: 0; }
+
+    .services-group legend {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--navy);
+      margin-bottom: 8px;
+      padding: 0;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+    }
+
+    .form-group label.check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+      padding: 10px 12px;
+      border: 2px solid #cfe3ec;
+      border-radius: 10px;
+      background: #f5f9fb;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .form-group label.check:has(input:checked) {
+      border-color: var(--teal);
+      background: rgba(26, 163, 181, 0.12);
+    }
+
+    .check input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--navy);
+      flex-shrink: 0;
+    }
+
+    [hidden] { display: none !important; }
 
     @media (max-width: 600px) {
       .section-title { font-size: 1rem; }
@@ -367,7 +425,7 @@
     <div class="section-title"><span class="num">4</span> Faire une demande de service</div>
     <div class="request-card" id="demande">
       <h3>Formulaire de demande</h3>
-      <p class="intro">Remplissez le formulaire puis cliquez sur « Envoyer ». WhatsApp s'ouvrira avec votre demande déjà rédigée : il vous suffit d'appuyer sur envoyer.</p>
+      <p class="intro">Remplissez le formulaire puis cliquez sur « Envoyer la demande ». Notre équipe recevra votre demande et vous contactera. Pour nous joindre directement, utilisez le bouton WhatsApp en bas de la page.</p>
 
       <form id="service-form" novalidate>
         <div class="form-grid">
@@ -379,7 +437,7 @@
 
           <div class="form-group">
             <label for="telephone">Téléphone (WhatsApp) <span class="req">*</span></label>
-            <input type="tel" id="telephone" name="telephone" placeholder="Ex. 01 42 08 73 97" required>
+            <input type="tel" id="telephone" name="telephone" placeholder="Ex. 019700000000" required>
           </div>
 
           <div class="form-group">
@@ -387,20 +445,19 @@
             <input type="email" id="email" name="email" placeholder="exemple@mail.com">
           </div>
 
-          <div class="form-group">
-            <label for="service">Service demandé <span class="req">*</span></label>
-            <select id="service" name="service" required>
-              <option value="">-- Choisissez un service --</option>
-              <option value="Installation & activation Windows 10">Installation &amp; activation Windows 10</option>
-              <option value="Installation & activation Windows 11">Installation &amp; activation Windows 11</option>
-              <option value="Pack Microsoft Office (2013 à 2024)">Pack Microsoft Office (2013 à 2024)</option>
-              <option value="Dépannage : écran bleu (BSOD)">Dépannage : écran bleu (BSOD)</option>
-              <option value="Reboot / réinstallation complète">Reboot / réinstallation complète</option>
-              <option value="Lenteurs et optimisation">Lenteurs et optimisation</option>
-              <option value="Suppression de virus et malwares">Suppression de virus et malwares</option>
-              <option value="Autre">Autre</option>
-            </select>
-          </div>
+          <fieldset class="form-group full services-group">
+            <legend>Services demandés <span class="req">*</span> <small>(cochez tous ceux qui vous intéressent)</small></legend>
+            <div class="checkbox-grid">
+              <label class="check"><input type="checkbox" name="service" value="Installation et activation Windows 10"> Installation et activation Windows 10</label>
+              <label class="check"><input type="checkbox" name="service" value="Installation et activation Windows 11"> Installation et activation Windows 11</label>
+              <label class="check"><input type="checkbox" name="service" value="Pack Microsoft Office (2013 à 2024)"> Pack Microsoft Office (2013 à 2024)</label>
+              <label class="check"><input type="checkbox" name="service" value="Dépannage : écran bleu (BSOD)"> Dépannage : écran bleu (BSOD)</label>
+              <label class="check"><input type="checkbox" name="service" value="Reboot / réinstallation complète"> Reboot / réinstallation complète</label>
+              <label class="check"><input type="checkbox" name="service" value="Lenteurs et optimisation"> Lenteurs et optimisation</label>
+              <label class="check"><input type="checkbox" name="service" value="Suppression de virus et malwares"> Suppression de virus et malwares</label>
+              <label class="check"><input type="checkbox" name="service" value="Autre"> Autre (précisez dans la description)</label>
+            </div>
+          </fieldset>
 
           <div class="form-group">
             <label for="date">Date souhaitée <small>(optionnel)</small></label>
@@ -428,10 +485,15 @@
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="btn btn-submit">📨 Envoyer la demande via WhatsApp</button>
+          <button type="submit" class="btn btn-submit">📨 Envoyer la demande</button>
           <p class="form-note">* Champs obligatoires. Votre demande est envoyée directement à MD Solutions.</p>
         </div>
       </form>
+
+      <div class="success-box" id="success-box" hidden>
+        <h3>✅ Merci, votre demande a bien été reçue !</h3>
+        <p>Notre équipe vous contactera au numéro indiqué. Vous pouvez aussi nous écrire directement sur WhatsApp.</p>
+      </div>
     </div>
 
     <!-- Contact -->
@@ -449,9 +511,7 @@
   </div>
 
   <script>
-    const WHATSAPP_NUMBER = "2290142087397";
-
-    // Supabase : URL du projet (sans /rest/v1/, le code l'ajoute) et clé publishable (anon)
+    // Supabase : URL du projet et clé publishable (anon). Les demandes sont uniquement enregistrées dans la base.
     const SUPABASE_URL = "https://ktikioeudhiijtfcycwc.supabase.co";
     const SUPABASE_KEY = "sb_publishable_8ESqBa375RwiYoPnjYB6EA_pN47snAS";
     const TABLE_URL = SUPABASE_URL + "/rest/v1/demandes_service";
@@ -461,9 +521,10 @@
     const geoStatus = document.getElementById("geo-status");
     const submitBtn = form.querySelector('button[type="submit"]');
     const submitLabel = submitBtn.textContent;
+    const successBox = document.getElementById("success-box");
     let position = null;
 
-    // Demande de localisation GPS (le navigateur demande l'autorisation)
+    // Localisation GPS (le navigateur demande l'autorisation)
     geoBtn.addEventListener("click", () => {
       if (!navigator.geolocation) {
         geoStatus.textContent = "Géolocalisation non disponible sur cet appareil. Indiquez votre adresse.";
@@ -490,7 +551,7 @@
       );
     });
 
-    // Envoi de la demande : enregistrement dans Supabase, puis ouverture de WhatsApp
+    // Envoi de la demande vers la base Supabase
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -498,22 +559,20 @@
       const nom = get("nom");
       const telephone = get("telephone");
       const email = get("email");
-      const service = get("service");
+      const services = Array.from(document.querySelectorAll('input[name="service"]:checked'))
+        .map((box) => box.value);
       const date = get("date");
       const adresse = get("adresse");
       const description = get("description");
 
-      if (!nom || !telephone || !service || !description) {
-        alert("Merci de remplir les champs obligatoires (*).");
+      if (!nom || !telephone || services.length === 0 || !description) {
+        alert("Merci de remplir les champs obligatoires (*), et de cocher au moins un service.");
         return;
       }
       if (!position && !adresse) {
         alert("Merci de partager votre position GPS ou d'indiquer votre adresse.");
         return;
       }
-
-      // Ouvre l'onglet WhatsApp tout de suite, pour éviter son blocage par le navigateur après l'attente
-      const waWindow = window.open("", "_blank");
 
       submitBtn.disabled = true;
       submitBtn.textContent = "Envoi en cours...";
@@ -522,7 +581,7 @@
         nom: nom,
         telephone: telephone,
         email: email || null,
-        service: service,
+        service: services.join(", "),
         date_souhaitee: date || null,
         adresse: adresse || null,
         latitude: position ? parseFloat(position.lat) : null,
@@ -543,33 +602,16 @@
           body: JSON.stringify(payload)
         });
         if (!res.ok) throw new Error("HTTP " + res.status);
+
+        form.hidden = true;
+        successBox.hidden = false;
+        successBox.scrollIntoView({ behavior: "smooth", block: "center" });
       } catch (err) {
-        console.error("Enregistrement Supabase impossible :", err);
-        alert("Votre demande n'a pas pu être enregistrée sur le site, mais elle va quand même être envoyée sur WhatsApp.");
+        console.error("Enregistrement impossible :", err);
+        alert("Votre demande n'a pas pu être envoyée. Merci de réessayer ou de nous contacter sur WhatsApp.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitLabel;
       }
-
-      // Message WhatsApp préremplie
-      let message = "*Nouvelle demande de service - MD Solutions*\n\n";
-      message += `*Nom :* ${nom}\n`;
-      message += `*Téléphone :* ${telephone}\n`;
-      if (email) message += `*Email :* ${email}\n`;
-      message += `*Service :* ${service}\n`;
-      if (date) message += `*Date souhaitée :* ${date}\n`;
-      if (adresse) message += `*Adresse :* ${adresse}\n`;
-      if (position) {
-        message += `*Position GPS :* https://www.google.com/maps?q=${position.lat},${position.lng}\n`;
-      }
-      message += `\n*Détails :*\n${description}`;
-
-      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-      if (waWindow) {
-        waWindow.location.href = url;
-      } else {
-        window.location.href = url;
-      }
-
-      submitBtn.disabled = false;
-      submitBtn.textContent = submitLabel;
     });
   </script>
 </body>
