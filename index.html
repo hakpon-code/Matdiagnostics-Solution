@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MD Solutions (Matdiagnostics Solutions) - Services informatiques</title>
-  <meta name="description" content="MD Solutions : installation et activation Windows 10/11, pack Microsoft Office, dépannage informatique professionnel.">
+  <meta name="description" content="MD Solutions : installation et activation Windows 10/11, pack Microsoft Office, dépannage informatique professionnel. Demande de service en ligne.">
   <link rel="icon" href="logo-md.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,23 +17,21 @@
       --green: #2fa37a;
       --cyan: #7fe7f5;
       --yellow: #ffd21f;
+      --red: #c0392b;
       --text: #10283a;
       --white: #ffffff;
       --card: rgba(255, 255, 255, 0.94);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Montserrat', Arial, sans-serif;
       color: var(--text);
       min-height: 100vh;
-      /* Arrière-plan "circuit" inspiré de l'affiche.
-         Pour utiliser une vraie image : ajoutez background.jpg dans le dépôt
-         et remplacez la ligne background ci-dessous par :
-         background: url('background.jpg') center / cover fixed, var(--navy); */
+      /* Pour une vraie image de fond : ajoutez background.jpg au dépôt et remplacez la ligne
+         background ci-dessous par : background: url('background.jpg') center / cover fixed, var(--navy); */
       background:
         radial-gradient(circle at 15% 20%, rgba(127, 231, 245, 0.35), transparent 40%),
         radial-gradient(circle at 85% 80%, rgba(47, 163, 122, 0.30), transparent 40%),
@@ -42,7 +40,6 @@
       overflow-x: hidden;
     }
 
-    /* Motif de circuits imprimés en filigrane */
     body::before {
       content: "";
       position: fixed;
@@ -64,10 +61,7 @@
     }
 
     /* ---------- En-tête ---------- */
-    header {
-      text-align: center;
-      padding: 40px 10px 20px;
-    }
+    header { text-align: center; padding: 40px 10px 20px; }
 
     header img.logo {
       width: min(320px, 70vw);
@@ -86,11 +80,7 @@
       text-transform: uppercase;
     }
 
-    header .sub {
-      color: var(--cyan);
-      font-weight: 600;
-      margin-top: 4px;
-    }
+    header .sub { color: var(--cyan); font-weight: 600; margin-top: 4px; }
 
     .promo-banner {
       margin: 25px auto 35px;
@@ -106,7 +96,7 @@
       text-transform: uppercase;
     }
 
-    /* ---------- Cartes de services ---------- */
+    /* ---------- Sections et cartes ---------- */
     .section-title {
       color: var(--white);
       font-size: 1.2rem;
@@ -143,37 +133,14 @@
       border-radius: 18px;
       padding: 24px;
       box-shadow: 0 10px 28px rgba(0,0,0,0.22);
-      position: relative;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 36px rgba(0,0,0,0.3);
-    }
-
-    .card h3 {
-      color: var(--navy);
-      font-size: 1.05rem;
-      margin-bottom: 10px;
-    }
-
-    .card p, .card li {
-      font-size: 0.95rem;
-      line-height: 1.55;
-    }
-
-    .card ul {
-      list-style: none;
-      margin-top: 8px;
-    }
-
-    .card li::before {
-      content: "✔";
-      color: var(--green);
-      font-weight: 800;
-      margin-right: 8px;
-    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(0,0,0,0.3); }
+    .card h3 { color: var(--navy); font-size: 1.05rem; margin-bottom: 10px; }
+    .card p, .card li { font-size: 0.95rem; line-height: 1.55; }
+    .card ul { list-style: none; margin-top: 8px; }
+    .card li::before { content: "✔"; color: var(--green); font-weight: 800; margin-right: 8px; }
 
     .badge {
       display: inline-block;
@@ -184,11 +151,6 @@
       padding: 8px 14px;
       border-radius: 999px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-
-    .badge.plain {
-      background: var(--navy);
-      color: var(--white);
     }
 
     .tag {
@@ -202,6 +164,107 @@
       margin: 6px 6px 0 0;
     }
 
+    /* ---------- Formulaire de demande ---------- */
+    .request-card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 28px 24px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+    }
+
+    .request-card h3 { color: var(--navy); font-size: 1.2rem; margin-bottom: 6px; }
+    .request-card .intro { font-size: 0.9rem; color: #45606f; margin-bottom: 22px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 20px;
+    }
+
+    .form-group { display: flex; flex-direction: column; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-group label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .form-group label .req { color: var(--red); }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 11px 12px;
+      border: 2px solid #cfe3ec;
+      border-radius: 10px;
+      background: var(--white);
+      color: var(--text);
+      transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--teal);
+    }
+
+    .form-group textarea { min-height: 100px; resize: vertical; }
+
+    .location-box {
+      background: rgba(31,127,184,0.08);
+      border: 2px dashed var(--blue);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .location-box p { font-size: 0.88rem; margin-bottom: 12px; color: #2c4a5a; }
+
+    .btn {
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.95rem;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 22px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover { transform: scale(1.03); }
+
+    .btn-location {
+      background: var(--blue);
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(31,127,184,0.35);
+    }
+
+    .geo-status {
+      margin-top: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--green);
+      min-height: 1.2em;
+    }
+
+    .geo-status.error { color: var(--red); }
+
+    .form-actions { margin-top: 22px; text-align: center; }
+
+    .btn-submit {
+      background: #25d366;
+      color: var(--white);
+      font-size: 1.05rem;
+      padding: 14px 30px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    }
+
+    .form-note { font-size: 0.8rem; color: #5a7282; margin-top: 12px; text-align: center; }
+
     /* ---------- Contact ---------- */
     .contact {
       margin-top: 40px;
@@ -213,11 +276,7 @@
       box-shadow: 0 12px 30px rgba(0,0,0,0.3);
     }
 
-    .contact h2 {
-      font-size: 1.4rem;
-      letter-spacing: 1px;
-      margin-bottom: 18px;
-    }
+    .contact h2 { font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 18px; }
 
     .contact-item {
       display: block;
@@ -246,16 +305,12 @@
 
     .whatsapp-btn:hover { transform: scale(1.05); }
 
-    footer {
-      text-align: center;
-      color: var(--cyan);
-      font-size: 0.85rem;
-      margin-top: 30px;
-    }
+    footer { text-align: center; color: var(--cyan); font-size: 0.85rem; margin-top: 30px; }
 
     @media (max-width: 600px) {
       .section-title { font-size: 1rem; }
-      .card { padding: 20px; }
+      .card, .request-card { padding: 20px; }
+      .form-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -308,6 +363,77 @@
       </div>
     </div>
 
+    <!-- 4. Demande de service -->
+    <div class="section-title"><span class="num">4</span> Faire une demande de service</div>
+    <div class="request-card" id="demande">
+      <h3>Formulaire de demande</h3>
+      <p class="intro">Remplissez le formulaire puis cliquez sur « Envoyer ». WhatsApp s'ouvrira avec votre demande déjà rédigée : il vous suffit d'appuyer sur envoyer.</p>
+
+      <form id="service-form" novalidate>
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="nom">Nom complet <span class="req">*</span></label>
+            <input type="text" id="nom" name="nom" placeholder="Ex. Jean Dupont" required>
+          </div>
+
+          <div class="form-group">
+            <label for="telephone">Téléphone (WhatsApp) <span class="req">*</span></label>
+            <input type="tel" id="telephone" name="telephone" placeholder="Ex. 01 42 08 73 97" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email <small>(optionnel)</small></label>
+            <input type="email" id="email" name="email" placeholder="exemple@mail.com">
+          </div>
+
+          <div class="form-group">
+            <label for="service">Service demandé <span class="req">*</span></label>
+            <select id="service" name="service" required>
+              <option value="">-- Choisissez un service --</option>
+              <option value="Installation & activation Windows 10">Installation &amp; activation Windows 10</option>
+              <option value="Installation & activation Windows 11">Installation &amp; activation Windows 11</option>
+              <option value="Pack Microsoft Office (2013 à 2024)">Pack Microsoft Office (2013 à 2024)</option>
+              <option value="Dépannage : écran bleu (BSOD)">Dépannage : écran bleu (BSOD)</option>
+              <option value="Reboot / réinstallation complète">Reboot / réinstallation complète</option>
+              <option value="Lenteurs et optimisation">Lenteurs et optimisation</option>
+              <option value="Suppression de virus et malwares">Suppression de virus et malwares</option>
+              <option value="Autre">Autre</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="date">Date souhaitée <small>(optionnel)</small></label>
+            <input type="date" id="date" name="date">
+          </div>
+
+          <div class="form-group full">
+            <label for="adresse">Adresse / quartier / repère <span class="req">*</span></label>
+            <input type="text" id="adresse" name="adresse" placeholder="Ex. Cotonou, Akpakpa, près de la pharmacie ...">
+          </div>
+
+          <div class="form-group full">
+            <div class="location-box">
+              <p>Pour nous aider à venir chez vous, partagez votre position GPS. Votre navigateur vous demandera l'autorisation. Si vous refusez, indiquez simplement votre adresse ci-dessus.</p>
+              <button type="button" class="btn btn-location" id="geo-btn">📍 Utiliser ma position actuelle</button>
+              <div class="geo-status" id="geo-status"></div>
+            </div>
+          </div>
+
+          <div class="form-group full">
+            <label for="description">Description du problème / détails <span class="req">*</span></label>
+            <textarea id="description" name="description" placeholder="Décrivez votre besoin ou le problème rencontré..." required></textarea>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-submit">📨 Envoyer la demande via WhatsApp</button>
+          <p class="form-note">* Champs obligatoires. Votre demande est envoyée directement à MD Solutions.</p>
+        </div>
+      </form>
+    </div>
+
     <!-- Contact -->
     <section class="contact" id="contact">
       <h2>CONTACTEZ-NOUS</h2>
@@ -321,5 +447,130 @@
     </footer>
 
   </div>
+
+  <script>
+    const WHATSAPP_NUMBER = "2290142087397";
+
+    // Supabase : URL du projet (sans /rest/v1/, le code l'ajoute) et clé publishable (anon)
+    const SUPABASE_URL = "https://ktikioeudhiijtfcycwc.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_8ESqBa375RwiYoPnjYB6EA_pN47snAS";
+    const TABLE_URL = SUPABASE_URL + "/rest/v1/demandes_service";
+
+    const form = document.getElementById("service-form");
+    const geoBtn = document.getElementById("geo-btn");
+    const geoStatus = document.getElementById("geo-status");
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const submitLabel = submitBtn.textContent;
+    let position = null;
+
+    // Demande de localisation GPS (le navigateur demande l'autorisation)
+    geoBtn.addEventListener("click", () => {
+      if (!navigator.geolocation) {
+        geoStatus.textContent = "Géolocalisation non disponible sur cet appareil. Indiquez votre adresse.";
+        geoStatus.classList.add("error");
+        return;
+      }
+      geoStatus.classList.remove("error");
+      geoStatus.textContent = "Recherche de votre position...";
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          position = {
+            lat: pos.coords.latitude.toFixed(6),
+            lng: pos.coords.longitude.toFixed(6)
+          };
+          geoStatus.textContent = "✅ Position enregistrée.";
+        },
+        () => {
+          position = null;
+          geoStatus.textContent = "Localisation refusée ou indisponible. Indiquez votre adresse ci-dessus.";
+          geoStatus.classList.add("error");
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      );
+    });
+
+    // Envoi de la demande : enregistrement dans Supabase, puis ouverture de WhatsApp
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const get = (id) => document.getElementById(id).value.trim();
+      const nom = get("nom");
+      const telephone = get("telephone");
+      const email = get("email");
+      const service = get("service");
+      const date = get("date");
+      const adresse = get("adresse");
+      const description = get("description");
+
+      if (!nom || !telephone || !service || !description) {
+        alert("Merci de remplir les champs obligatoires (*).");
+        return;
+      }
+      if (!position && !adresse) {
+        alert("Merci de partager votre position GPS ou d'indiquer votre adresse.");
+        return;
+      }
+
+      // Ouvre l'onglet WhatsApp tout de suite, pour éviter son blocage par le navigateur après l'attente
+      const waWindow = window.open("", "_blank");
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Envoi en cours...";
+
+      const payload = {
+        nom: nom,
+        telephone: telephone,
+        email: email || null,
+        service: service,
+        date_souhaitee: date || null,
+        adresse: adresse || null,
+        latitude: position ? parseFloat(position.lat) : null,
+        longitude: position ? parseFloat(position.lng) : null,
+        description: description,
+        statut: "nouvelle"
+      };
+
+      try {
+        const res = await fetch(TABLE_URL, {
+          method: "POST",
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Authorization": "Bearer " + SUPABASE_KEY,
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal"
+          },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+      } catch (err) {
+        console.error("Enregistrement Supabase impossible :", err);
+        alert("Votre demande n'a pas pu être enregistrée sur le site, mais elle va quand même être envoyée sur WhatsApp.");
+      }
+
+      // Message WhatsApp préremplie
+      let message = "*Nouvelle demande de service - MD Solutions*\n\n";
+      message += `*Nom :* ${nom}\n`;
+      message += `*Téléphone :* ${telephone}\n`;
+      if (email) message += `*Email :* ${email}\n`;
+      message += `*Service :* ${service}\n`;
+      if (date) message += `*Date souhaitée :* ${date}\n`;
+      if (adresse) message += `*Adresse :* ${adresse}\n`;
+      if (position) {
+        message += `*Position GPS :* https://www.google.com/maps?q=${position.lat},${position.lng}\n`;
+      }
+      message += `\n*Détails :*\n${description}`;
+
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      if (waWindow) {
+        waWindow.location.href = url;
+      } else {
+        window.location.href = url;
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = submitLabel;
+    });
+  </script>
 </body>
 </html>
