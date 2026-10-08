@@ -84,6 +84,8 @@
     .btn-primary { background: var(--navy); color: #fff; width: 100%; margin-top: 18px; }
     .btn-out { background: #e3edf2; color: var(--navy); }
     .btn-wa { background: #25d366; color: #fff; padding: 9px 16px; }
+    .btn-del { background: #fbe9e7; color: var(--red); padding: 9px 16px; }
+    .btn-danger { background: var(--red); color: #fff; }
 
     .error { color: var(--red); font-size: 0.85rem; margin-top: 10px; min-height: 1em; }
 
@@ -210,6 +212,7 @@
             <option value="terminee">Terminées</option>
           </select>
           <button class="btn-out" id="refresh-btn">Actualiser</button>
+          <button class="btn-danger" id="purge-btn">Supprimer les terminées</button>
         </div>
       </div>
 
@@ -341,6 +344,7 @@
           <div class="actions">
             <a class="btn btn-wa" href="${waLink(d.telephone)}" target="_blank" rel="noopener">💬 Ouvrir WhatsApp</a>
             <select onchange="changerStatut(${Number(d.id)}, this.value)">${options}</select>
+            <button class="btn btn-del" onclick="supprimerDemande(${Number(d.id)})">🗑 Supprimer</button>
           </div>
         </div>`;
     }
@@ -362,6 +366,45 @@
       render();
     }
 
+    async function supprimerDemande(id) {
+      if (!confirm("Supprimer définitivement cette demande ? Cette action est irréversible.")) return;
+
+      const res = await fetch(TABLE_URL + "?id=eq." + id, {
+        method: "DELETE",
+        headers: authHeaders({ "Prefer": "return=minimal" })
+      });
+
+      if (!res.ok) {
+        alert("Suppression impossible. Reconnectez-vous et réessayez.");
+        return;
+      }
+
+      demandes = demandes.filter((d) => d.id !== id);
+      render();
+    }
+
+    async function supprimerTerminees() {
+      const n = demandes.filter((d) => d.statut === "terminee").length;
+      if (!n) {
+        alert("Aucune demande terminée à supprimer.");
+        return;
+      }
+      if (!confirm(`Supprimer définitivement les ${n} demande(s) terminée(s) ? Cette action est irréversible.`)) return;
+
+      const res = await fetch(TABLE_URL + "?statut=eq.terminee", {
+        method: "DELETE",
+        headers: authHeaders({ "Prefer": "return=minimal" })
+      });
+
+      if (!res.ok) {
+        alert("Suppression impossible. Reconnectez-vous et réessayez.");
+        return;
+      }
+
+      demandes = demandes.filter((d) => d.statut !== "terminee");
+      render();
+    }
+
     function logout() {
       accessToken = null;
       location.reload();
@@ -371,6 +414,7 @@
     $("logout-btn").addEventListener("click", logout);
     $("refresh-btn").addEventListener("click", loadDemandes);
     $("filter").addEventListener("change", render);
+    $("purge-btn").addEventListener("click", supprimerTerminees);
   </script>
 </body>
 </html>
