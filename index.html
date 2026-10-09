@@ -1,618 +1,382 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MD Solutions (Matdiagnostics Solutions) - Services informatiques</title>
-  <meta name="description" content="MD Solutions : installation et activation Windows 10/11, pack Microsoft Office, dépannage informatique professionnel. Demande de service en ligne.">
-  <link rel="icon" href="logo-md.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --navy: #0b3c5d;
-      --blue: #1f7fb8;
-      --teal: #1aa3b5;
-      --green: #2fa37a;
-      --cyan: #7fe7f5;
-      --yellow: #ffd21f;
-      --red: #c0392b;
-      --text: #10283a;
-      --white: #ffffff;
-      --card: rgba(255, 255, 255, 0.94);
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MatDiagnostics Solution</title>
+<meta name="description" content="MatDiagnostics Solution : diagnostics, suivi et solutions sur mesure.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230B2545'/%3E%3Cpath d='M13 46V20l11 14 8-10 8 10 11-14v26' fill='none' stroke='%2319B5A5' stroke-width='4.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='24' r='3.6' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0B2545;
+    --navy-2: #163A63;
+    --teal: #19B5A5;
+    --deep: #0E7C72;
+    --slate: #5B6B7A;
+    --mist: #F4F7FA;
+    --line: #DDE5EC;
+    --white: #FFFFFF;
+    --radius: 20px;
+  }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--navy);
+    background: var(--white);
+    line-height: 1.6;
+  }
+  a { color: inherit; }
+  img, svg { display: block; }
+  .container { width: min(1120px, 92%); margin-inline: auto; }
 
-    body {
-      font-family: 'Montserrat', Arial, sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-      /* Pour une vraie image de fond : ajoutez background.jpg au dépôt et remplacez la ligne
-         background ci-dessous par : background: url('background.jpg') center / cover fixed, var(--navy); */
-      background:
-        radial-gradient(circle at 15% 20%, rgba(127, 231, 245, 0.35), transparent 40%),
-        radial-gradient(circle at 85% 80%, rgba(47, 163, 122, 0.30), transparent 40%),
-        linear-gradient(160deg, #0a2540 0%, #125a7a 45%, #1aa3b5 100%);
-      position: relative;
-      overflow-x: hidden;
-    }
+  /* Logo */
+  .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
+  .brand svg { width: 42px; height: 42px; flex: none; }
+  .brand-text { font-size: 19px; line-height: 1; letter-spacing: -0.2px; }
+  .brand-text b { font-weight: 700; }
+  .brand-text span { font-weight: 400; }
+  .brand-tag { display: block; margin-top: 4px; font-size: 9px; font-weight: 600; letter-spacing: 4px; color: var(--deep); }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(90deg, rgba(127,231,245,0.08) 1px, transparent 1px),
-        linear-gradient(0deg, rgba(127,231,245,0.08) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-      z-index: 0;
-    }
+  /* Header */
+  .site-header {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+  .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; margin: 0; padding: 0; font-size: 15px; font-weight: 500; }
+  .nav-links a { text-decoration: none; color: var(--slate); transition: color .2s; }
+  .nav-links a:hover, .nav-links a:focus-visible { color: var(--navy); }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 13px 24px; border-radius: 12px;
+    font-weight: 600; font-size: 15px; text-decoration: none;
+    transition: transform .15s, background .2s, color .2s;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--navy); color: var(--white); }
+  .btn-primary:hover { background: var(--navy-2); }
+  .btn-ghost { border: 1.5px solid var(--navy); color: var(--navy); }
+  .btn-ghost:hover { background: var(--navy); color: var(--white); }
+  .btn:focus-visible, .nav-links a:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
 
-    .wrapper {
-      position: relative;
-      z-index: 1;
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 20px 40px;
-    }
+  .nav-right { display: flex; align-items: center; gap: 18px; }
+  .nav-phone { font-size: 15px; font-weight: 600; color: var(--navy); text-decoration: none; white-space: nowrap; }
+  .nav-phone:hover { color: var(--deep); }
+  .hero-phone { margin: 0; font-size: 15px; color: #B8C9D6; }
+  .hero-phone a { color: var(--teal); font-weight: 600; text-decoration: none; }
+  .hero-phone a:hover { color: var(--white); }
+  .contact-info a:hover { color: var(--deep); }
 
-    /* ---------- En-tête ---------- */
-    header { text-align: center; padding: 40px 10px 20px; }
+  /* Hero */
+  .hero { background: var(--mist); padding: 96px 0 104px; }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 64px; align-items: center; }
+  .eyebrow { display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--deep); margin: 0 0 16px; }
+  h1 { font-size: clamp(36px, 5vw, 56px); line-height: 1.12; letter-spacing: -1px; margin: 0 0 20px; font-weight: 700; }
+  .lead { font-size: 18px; color: var(--slate); max-width: 520px; margin: 0 0 36px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 14px; }
+  .hero-card {
+    background: var(--navy); color: var(--white);
+    border-radius: 28px; padding: 40px;
+    display: grid; gap: 24px;
+    box-shadow: 0 30px 60px -30px rgba(11,37,69,.45);
+  }
+  .hero-card .mark { width: 88px; height: 88px; }
+  .hero-card h2 { margin: 0; font-size: 22px; font-weight: 600; }
+  .hero-card p { margin: 0; color: #B8C9D6; font-size: 15px; }
+  .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.14); }
+  .hero-stats div { font-size: 13px; color: #B8C9D6; }
+  .hero-stats strong { display: block; font-size: 15px; color: var(--teal); font-weight: 600; margin-bottom: 4px; }
 
-    header img.logo {
-      width: min(320px, 70vw);
-      height: auto;
-      background: rgba(255,255,255,0.92);
-      border-radius: 18px;
-      padding: 10px 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
+  /* Sections */
+  section { padding: 96px 0; }
+  .section-head { max-width: 640px; margin-bottom: 56px; }
+  .section-head h2 { font-size: clamp(28px, 3.4vw, 40px); line-height: 1.2; letter-spacing: -.5px; margin: 0 0 14px; }
+  .section-head p { margin: 0; color: var(--slate); font-size: 17px; }
 
-    header h1 {
-      margin-top: 18px;
-      color: var(--white);
-      font-size: clamp(1.1rem, 3vw, 1.5rem);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
+  /* Services */
+  .services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .card {
+    background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 36px 32px; transition: transform .2s, box-shadow .2s, border-color .2s;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 24px 40px -28px rgba(11,37,69,.35); border-color: transparent; }
+  .icon-box {
+    width: 52px; height: 52px; border-radius: 14px; background: var(--mist);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 24px;
+  }
+  .icon-box svg { width: 26px; height: 26px; }
+  .card h3 { font-size: 20px; margin: 0 0 10px; font-weight: 600; }
+  .card p { margin: 0; color: var(--slate); font-size: 15px; }
 
-    header .sub { color: var(--cyan); font-weight: 600; margin-top: 4px; }
+  /* Approche */
+  .approach { background: var(--navy); color: var(--white); }
+  .approach .section-head p { color: #B8C9D6; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; list-style: none; margin: 0; padding: 0; counter-reset: step; }
+  .steps li {
+    border-top: 2px solid var(--teal); padding-top: 22px;
+  }
+  .steps .num { font-size: 13px; font-weight: 700; color: var(--teal); letter-spacing: 2px; }
+  .steps h3 { font-size: 18px; margin: 10px 0 8px; font-weight: 600; }
+  .steps p { margin: 0; color: #B8C9D6; font-size: 15px; }
 
-    .promo-banner {
-      margin: 25px auto 35px;
-      max-width: 720px;
-      background: var(--yellow);
-      color: var(--navy);
-      text-align: center;
-      font-weight: 800;
-      font-size: clamp(1rem, 2.6vw, 1.35rem);
-      padding: 16px 20px;
-      border-radius: 14px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-      text-transform: uppercase;
-    }
+  /* À propos */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .about-grid p { color: var(--slate); font-size: 17px; margin: 0 0 18px; }
+  .checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+  .checks li { display: flex; gap: 14px; align-items: flex-start; font-size: 16px; }
+  .checks li::before {
+    content: ""; flex: none; width: 22px; height: 22px; margin-top: 2px; border-radius: 50%;
+    background: var(--teal) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;
+  }
 
-    /* ---------- Sections et cartes ---------- */
-    .section-title {
-      color: var(--white);
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin: 30px 0 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-transform: uppercase;
-    }
+  /* Contact */
+  .contact { background: var(--mist); }
+  .contact-box {
+    background: var(--white); border: 1px solid var(--line); border-radius: 28px;
+    padding: 56px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center;
+  }
+  .contact-box h2 { font-size: 32px; letter-spacing: -.5px; margin: 0 0 12px; }
+  .contact-box p { margin: 0; color: var(--slate); }
+  .contact-info { display: grid; gap: 14px; font-size: 16px; }
+  .contact-info a { text-decoration: none; font-weight: 500; }
+  .contact-info a:hover { color: var(--deep); }
+  .contact-info span { display: block; font-size: 13px; color: var(--slate); }
 
-    .num {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--navy);
-      color: var(--white);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      border: 2px solid var(--cyan);
-      flex-shrink: 0;
-    }
+  /* Footer */
+  footer { background: var(--navy); color: #B8C9D6; padding: 56px 0 32px; font-size: 14px; }
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; flex-wrap: wrap; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,.12); }
+  .footer-top .brand-text { color: var(--white); }
+  .footer-top .brand-tag { color: var(--teal); }
+  .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+  .footer-links a { text-decoration: none; }
+  .footer-links a:hover { color: var(--white); }
+  .copy { padding-top: 24px; font-size: 13px; }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: 18px;
-      padding: 24px;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.22);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .card:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(0,0,0,0.3); }
-    .card h3 { color: var(--navy); font-size: 1.05rem; margin-bottom: 10px; }
-    .card p, .card li { font-size: 0.95rem; line-height: 1.55; }
-    .card ul { list-style: none; margin-top: 8px; }
-    .card li::before { content: "✔"; color: var(--green); font-weight: 800; margin-right: 8px; }
-
-    .badge {
-      display: inline-block;
-      margin-top: 14px;
-      background: var(--yellow);
-      color: var(--navy);
-      font-weight: 800;
-      padding: 8px 14px;
-      border-radius: 999px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-
-    .tag {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      background: rgba(31,127,184,0.12);
-      color: var(--blue);
-      padding: 4px 10px;
-      border-radius: 6px;
-      margin: 6px 6px 0 0;
-    }
-
-    /* ---------- Formulaire de demande ---------- */
-    .request-card {
-      background: var(--card);
-      border-radius: 18px;
-      padding: 28px 24px;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.22);
-    }
-
-    .request-card h3 { color: var(--navy); font-size: 1.2rem; margin-bottom: 6px; }
-    .request-card .intro { font-size: 0.9rem; color: #45606f; margin-bottom: 22px; }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px 20px;
-    }
-
-    .form-group { display: flex; flex-direction: column; }
-    .form-group.full { grid-column: 1 / -1; }
-
-    .form-group label {
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--navy);
-      margin-bottom: 6px;
-    }
-
-    .form-group label .req { color: var(--red); }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      font-family: inherit;
-      font-size: 0.95rem;
-      padding: 11px 12px;
-      border: 2px solid #cfe3ec;
-      border-radius: 10px;
-      background: var(--white);
-      color: var(--text);
-      transition: border-color 0.2s ease;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: var(--teal);
-    }
-
-    .form-group textarea { min-height: 100px; resize: vertical; }
-
-    .location-box {
-      background: rgba(31,127,184,0.08);
-      border: 2px dashed var(--blue);
-      border-radius: 12px;
-      padding: 16px;
-    }
-
-    .location-box p { font-size: 0.88rem; margin-bottom: 12px; color: #2c4a5a; }
-
-    .btn {
-      font-family: inherit;
-      font-weight: 800;
-      font-size: 0.95rem;
-      border: none;
-      border-radius: 999px;
-      padding: 12px 22px;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .btn:hover { transform: scale(1.03); }
-
-    .btn-location {
-      background: var(--blue);
-      color: var(--white);
-      box-shadow: 0 4px 12px rgba(31,127,184,0.35);
-    }
-
-    .geo-status {
-      margin-top: 10px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--green);
-      min-height: 1.2em;
-    }
-
-    .geo-status.error { color: var(--red); }
-
-    .form-actions { margin-top: 22px; text-align: center; }
-
-    .btn-submit {
-      background: var(--navy);
-      color: var(--white);
-      font-size: 1.05rem;
-      padding: 14px 30px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-    }
-
-    .form-note { font-size: 0.8rem; color: #5a7282; margin-top: 12px; text-align: center; }
-
-    /* ---------- Contact ---------- */
-    .contact {
-      margin-top: 40px;
-      background: linear-gradient(135deg, var(--navy), var(--teal));
-      color: var(--white);
-      border-radius: 18px;
-      padding: 30px 24px;
-      text-align: center;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
-    }
-
-    .contact h2 { font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 18px; }
-
-    .contact-item {
-      display: block;
-      color: var(--white);
-      text-decoration: none;
-      font-size: 1.05rem;
-      font-weight: 600;
-      margin: 10px 0;
-      word-break: break-word;
-    }
-
-    .contact-item:hover { color: var(--yellow); }
-
-    .whatsapp-btn {
-      display: inline-block;
-      margin-top: 18px;
-      background: #25d366;
-      color: var(--white);
-      text-decoration: none;
-      font-weight: 800;
-      padding: 14px 26px;
-      border-radius: 999px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-      transition: transform 0.2s ease;
-    }
-
-    .whatsapp-btn:hover { transform: scale(1.05); }
-
-    footer { text-align: center; color: var(--cyan); font-size: 0.85rem; margin-top: 30px; }
-
-    .success-box {
-      text-align: center;
-      padding: 24px;
-      border-radius: 14px;
-      background: rgba(47, 163, 122, 0.12);
-      border: 2px solid var(--green);
-      color: var(--navy);
-    }
-
-    .success-box h3 { font-size: 1.15rem; margin-bottom: 8px; }
-    .success-box p { font-size: 0.95rem; line-height: 1.5; }
-
-    .services-group { border: none; margin: 0; padding: 0; min-width: 0; }
-
-    .services-group legend {
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--navy);
-      margin-bottom: 8px;
-      padding: 0;
-    }
-
-    .checkbox-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 10px;
-    }
-
-    .form-group label.check {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 0;
-      padding: 10px 12px;
-      border: 2px solid #cfe3ec;
-      border-radius: 10px;
-      background: #f5f9fb;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text);
-      cursor: pointer;
-      transition: border-color 0.2s ease, background 0.2s ease;
-    }
-
-    .form-group label.check:has(input:checked) {
-      border-color: var(--teal);
-      background: rgba(26, 163, 181, 0.12);
-    }
-
-    .check input {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--navy);
-      flex-shrink: 0;
-    }
-
-    [hidden] { display: none !important; }
-
-    @media (max-width: 600px) {
-      .section-title { font-size: 1rem; }
-      .card, .request-card { padding: 20px; }
-      .form-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+  /* Responsive */
+  @media (max-width: 900px) {
+    .hero-grid, .about-grid, .contact-box { grid-template-columns: 1fr; }
+    .services { grid-template-columns: 1fr 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .contact-box { padding: 40px 28px; }
+  }
+  @media (max-width: 640px) {
+    .nav-links li:not(:last-child) { display: none; }
+    .nav-phone { display: none; }
+    .services, .steps { grid-template-columns: 1fr; }
+    .hero { padding: 64px 0 72px; }
+    section { padding: 72px 0; }
+    .hero-stats { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+</style>
 </head>
 <body>
-  <div class="wrapper">
 
-    <header>
-      <img class="logo" src="logo-md.png" alt="Logo MD Solutions">
-      <h1>MD Solutions</h1>
-      <div class="sub">(Matdiagnostics Solutions)</div>
-    </header>
-
-    <div class="promo-banner">Promotion exceptionnelle sur nos services informatiques !</div>
-
-    <!-- 1. Windows -->
-    <div class="section-title"><span class="num">1</span> Installation &amp; activation Windows 10 / 11</div>
-    <div class="grid">
-      <div class="card">
-        <h3>Service complet</h3>
-        <p>Installation et activation avec clés authentiques.</p>
-        <span class="tag">Windows 10</span><span class="tag">Windows 11</span>
-        <br>
-        <span class="badge">Prix promo : 5 000 F</span>
-      </div>
+<header class="site-header">
+  <nav class="container nav" aria-label="Navigation principale">
+    <a class="brand" href="#accueil" aria-label="MatDiagnostics Solution, retour à l'accueil">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="16" fill="#0B2545"/>
+        <path d="M13 46V20l11 14 8-10 8 10 11-14v26" fill="none" stroke="#19B5A5" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="32" cy="24" r="3.6" fill="#FFFFFF"/>
+      </svg>
+      <div class="brand-text"><b>Mat</b><span>Diagnostics</span><small class="brand-tag">SOLUTION</small></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#approche">Approche</a></li>
+      <li><a href="#a-propos">À propos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <a class="nav-phone" href="tel:+22900000000" aria-label="Appeler au +229 00 00 00 00">+229 00 00 00 00</a>
+      <a class="btn btn-primary" href="contact.html">Contactez-nous</a>
     </div>
+  </nav>
+</header>
 
-    <!-- 2. Office -->
-    <div class="section-title"><span class="num">2</span> Pack Microsoft Office (2013 à 2024)</div>
-    <div class="grid">
-      <div class="card">
-        <h3>Installation, configuration et activation</h3>
-        <p>Word, Excel, PowerPoint, Outlook, avec clés authentiques.</p>
-        <span class="tag">2013</span><span class="tag">2016</span><span class="tag">2019</span><span class="tag">2021</span><span class="tag">2024</span>
-        <br>
-        <span class="badge">Prix promo : 5 000 F</span>
-      </div>
-    </div>
+<main id="accueil">
 
-    <!-- 3. Dépannage -->
-    <div class="section-title"><span class="num">3</span> Dépannage informatique professionnel</div>
-    <div class="grid">
-      <div class="card">
-        <h3>Réparation &amp; optimisation</h3>
-        <ul>
-          <li>Résolution des écrans bleus (BSOD)</li>
-          <li>Reboot / réinstallation complète du système</li>
-          <li>Lenteurs et optimisation</li>
-          <li>Suppression de virus et malwares</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- 4. Demande de service -->
-    <div class="section-title"><span class="num">4</span> Faire une demande de service</div>
-    <div class="request-card" id="demande">
-      <h3>Formulaire de demande</h3>
-      <p class="intro">Remplissez le formulaire puis cliquez sur « Envoyer la demande ». Notre équipe recevra votre demande et vous contactera. Pour nous joindre directement, utilisez le bouton WhatsApp en bas de la page.</p>
-
-      <form id="service-form" novalidate>
-        <div class="form-grid">
-
-          <div class="form-group">
-            <label for="nom">Nom complet <span class="req">*</span></label>
-            <input type="text" id="nom" name="nom" placeholder="Ex. Jean Dupont" required>
-          </div>
-
-          <div class="form-group">
-            <label for="telephone">Téléphone (WhatsApp) <span class="req">*</span></label>
-            <input type="tel" id="telephone" name="telephone" placeholder="Ex. 0197000000" required>
-          </div>
-
-          <div class="form-group">
-            <label for="email">Email <small>(optionnel)</small></label>
-            <input type="email" id="email" name="email" placeholder="exemple@mail.com">
-          </div>
-
-          <fieldset class="form-group full services-group">
-            <legend>Services demandés <span class="req">*</span> <small>(cochez tous ceux qui vous intéressent)</small></legend>
-            <div class="checkbox-grid">
-              <label class="check"><input type="checkbox" name="service" value="Installation et activation Windows 10"> Installation et activation Windows 10</label>
-              <label class="check"><input type="checkbox" name="service" value="Installation et activation Windows 11"> Installation et activation Windows 11</label>
-              <label class="check"><input type="checkbox" name="service" value="Pack Microsoft Office (2013 à 2024)"> Pack Microsoft Office (2013 à 2024)</label>
-              <label class="check"><input type="checkbox" name="service" value="Dépannage : écran bleu (BSOD)"> Dépannage : écran bleu (BSOD)</label>
-              <label class="check"><input type="checkbox" name="service" value="Reboot / réinstallation complète"> Reboot / réinstallation complète</label>
-              <label class="check"><input type="checkbox" name="service" value="Lenteurs et optimisation"> Lenteurs et optimisation</label>
-              <label class="check"><input type="checkbox" name="service" value="Suppression de virus et malwares"> Suppression de virus et malwares</label>
-              <label class="check"><input type="checkbox" name="service" value="Autre"> Autre (précisez dans la description)</label>
-            </div>
-          </fieldset>
-
-          <div class="form-group">
-            <label for="date">Date souhaitée <small>(optionnel)</small></label>
-            <input type="date" id="date" name="date">
-          </div>
-
-          <div class="form-group full">
-            <label for="adresse">Adresse / quartier / repère <span class="req">*</span></label>
-            <input type="text" id="adresse" name="adresse" placeholder="Ex. Cotonou, Akpakpa, près de la pharmacie ...">
-          </div>
-
-          <div class="form-group full">
-            <div class="location-box">
-              <p>Pour nous aider à venir chez vous, partagez votre position GPS. Votre navigateur vous demandera l'autorisation. Si vous refusez, indiquez simplement votre adresse ci-dessus.</p>
-              <button type="button" class="btn btn-location" id="geo-btn">📍 Utiliser ma position actuelle</button>
-              <div class="geo-status" id="geo-status"></div>
-            </div>
-          </div>
-
-          <div class="form-group full">
-            <label for="description">Description du problème / détails <span class="req">*</span></label>
-            <textarea id="description" name="description" placeholder="Décrivez votre besoin ou le problème rencontré..." required></textarea>
-          </div>
-
+  <section class="hero" aria-labelledby="titre-hero" style="padding-top:96px">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">Diagnostics &amp; solutions</p>
+        <h1 id="titre-hero">Des diagnostics précis pour des décisions sûres.</h1>
+        <p class="lead">MatDiagnostics Solution accompagne vos équipes avec des diagnostics fiables, un suivi clair et des solutions adaptées à vos besoins.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="demande-service.html">Demander un Service</a>
+          <a class="btn btn-primary" href="contact.html">Contactez-nous</a>
+          <a class="btn btn-ghost" href="contact.html#demande">Envoyer une demande</a>
         </div>
+      </div>
 
-        <div class="form-actions">
-          <button type="submit" class="btn btn-submit">📨 Envoyer la demande</button>
-          <p class="form-note">* Champs obligatoires. Votre demande est envoyée directement à MD Solutions.</p>
+      <aside class="hero-card" aria-label="Points clés">
+        <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+          <rect width="64" height="64" rx="16" fill="#19B5A5"/>
+          <path d="M13 46V20l11 14 8-10 8 10 11-14v26" fill="none" stroke="#0B2545" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="32" cy="24" r="3.6" fill="#0B2545"/>
+        </svg>
+        <div>
+          <h2>Une approche claire, de l'analyse à la solution</h2>
+          <p>Chaque mission commence par un diagnostic, se poursuit par des recommandations concrètes et se termine par un suivi.</p>
+          <p class="hero-phone">Téléphone : <a href="tel:+22900000000">+229 00 00 00 00</a></p>
         </div>
-      </form>
+        <div class="hero-stats">
+          <div><strong>Diagnostic</strong>Analyse initiale</div>
+          <div><strong>Solution</strong>Mise en place adaptée</div>
+          <div><strong>Suivi</strong>Contrôle dans la durée</div>
+        </div>
+      </aside>
+    </div>
+  </section>
 
-      <div class="success-box" id="success-box" hidden>
-        <h3>✅ Merci, votre demande a bien été reçue !</h3>
-        <p>Notre équipe vous contactera au numéro indiqué. Vous pouvez aussi nous écrire directement sur WhatsApp.</p>
+  <section id="services" aria-labelledby="titre-services">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Nos services</p>
+        <h2 id="titre-services">Tout ce qu'il faut pour diagnostiquer et agir.</h2>
+        <p>Des prestations pensées pour vos besoins réels, du premier constat à la résolution.</p>
+      </div>
+
+      <div class="services">
+        <article class="card">
+          <div class="icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0B2545" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+          </div>
+          <h3>Diagnostic</h3>
+          <p>Inspection, analyse et identification précise des problèmes, avec un rapport clair et exploitable.</p>
+        </article>
+        <article class="card">
+          <div class="icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0B2545" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3.6 17.4a2 2 0 0 0 2.8 2.8l5.7-5.7a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg>
+          </div>
+          <h3>Solutions sur mesure</h3>
+          <p>Des recommandations et des interventions adaptées à votre contexte, votre budget et vos délais.</p>
+        </article>
+        <article class="card">
+          <div class="icon-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0B2545" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>
+          </div>
+          <h3>Suivi et maintenance</h3>
+          <p>Surveillance régulière, contrôles périodiques et accompagnement pour garder vos équipements performants.</p>
+        </article>
       </div>
     </div>
+  </section>
 
-    <!-- Contact -->
-    <section class="contact" id="contact">
-      <h2>CONTACTEZ-NOUS</h2>
-      <a class="contact-item" href="tel:+2290142087397">📞 +229 01 42 08 73 97</a>
-      <a class="contact-item" href="mailto:Matdiagnostics27@gmail.com">✉️ Matdiagnostics27@gmail.com</a>
-      <a class="whatsapp-btn" href="https://wa.me/2290142087397" target="_blank" rel="noopener">Discuter sur WhatsApp</a>
-    </section>
+  <section id="approche" class="approach" aria-labelledby="titre-approche">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow" style="color:#19B5A5">Notre approche</p>
+        <h2 id="titre-approche">Quatre étapes, sans zone d'ombre.</h2>
+        <p>Un processus simple et transparent, pour que vous sachiez toujours où en est votre projet.</p>
+      </div>
+      <ol class="steps">
+        <li>
+          <span class="num">01</span>
+          <h3>Écoute</h3>
+          <p>Nous comprenons votre contexte, vos contraintes et vos objectifs.</p>
+        </li>
+        <li>
+          <span class="num">02</span>
+          <h3>Diagnostic</h3>
+          <p>Nous analysons la situation et identifions les causes réelles.</p>
+        </li>
+        <li>
+          <span class="num">03</span>
+          <h3>Solution</h3>
+          <p>Nous proposons un plan d'action chiffré et priorisé.</p>
+        </li>
+        <li>
+          <span class="num">04</span>
+          <h3>Suivi</h3>
+          <p>Nous mesurons les résultats et ajustons si nécessaire.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
 
-    <footer>
-      © MD Solutions (Matdiagnostics Solutions) · matdiagnosticssolution.github.io
-    </footer>
+  <section id="a-propos" aria-labelledby="titre-apropos">
+    <div class="container about-grid">
+      <div>
+        <p class="eyebrow">À propos</p>
+        <h2 id="titre-apropos" class="section-head" style="margin:0 0 24px;font-size:clamp(28px,3.4vw,40px);line-height:1.2;letter-spacing:-.5px">Une équipe qui privilégie la rigueur et la clarté.</h2>
+        <p>MatDiagnostics Solution intervient auprès de ses clients avec une méthode rigoureuse : chaque constat est documenté, chaque recommandation est expliquée.</p>
+        <p>Notre objectif est simple : vous donner une vision juste de votre situation, et les moyens de la faire évoluer.</p>
+      </div>
+      <ul class="checks">
+        <li>Diagnostics documentés et compréhensibles</li>
+        <li>Recommandations priorisées selon vos enjeux</li>
+        <li>Communication directe et réactive</li>
+        <li>Accompagnement dans la durée</li>
+      </ul>
+    </div>
+  </section>
 
+  <section id="contact" class="contact" aria-labelledby="titre-contact">
+    <div class="container">
+      <div class="contact-box">
+        <div>
+          <h2 id="titre-contact">Parlons de votre besoin.</h2>
+          <p>Décrivez-nous votre situation : nous revenons vers vous rapidement pour convenir d'un premier échange.</p>
+          <div class="cta" style="margin-top:28px">
+            <a class="btn btn-primary" href="contact.html#demande">Envoyer une demande</a>
+            <a class="btn btn-ghost" href="tel:+22900000000">Appeler</a>
+          </div>
+        </div>
+        <div class="contact-info">
+          <div>
+            <span>E-mail</span>
+            <a href="mailto:contact@votre-domaine.com">contact@votre-domaine.com</a>
+          </div>
+          <div>
+            <span>Téléphone</span>
+            <a href="tel:+22900000000">+229 00 00 00 00</a>
+          </div>
+          <div>
+            <span>Adresse</span>
+            Cotonou, Bénin
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <a class="brand" href="#accueil" aria-label="MatDiagnostics Solution, retour à l'accueil">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <rect width="64" height="64" rx="16" fill="#19B5A5"/>
+          <path d="M13 46V20l11 14 8-10 8 10 11-14v26" fill="none" stroke="#0B2545" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="32" cy="24" r="3.6" fill="#0B2545"/>
+        </svg>
+        <div class="brand-text"><b>Mat</b><span>Diagnostics</span><small class="brand-tag">SOLUTION</small></div>
+      </a>
+      <nav class="footer-links" aria-label="Liens de pied de page">
+        <a href="#services">Services</a>
+        <a href="#approche">Approche</a>
+        <a href="#a-propos">À propos</a>
+        <a href="contact.html">Contact</a>
+        <a href="tel:+22900000000">+229 00 00 00 00</a>
+      </nav>
+    </div>
+    <p class="copy">© 2026 MatDiagnostics Solution. Tous droits réservés.</p>
   </div>
+</footer>
 
-  <script>
-    // Supabase : URL du projet et clé publishable (anon). Les demandes sont uniquement enregistrées dans la base.
-    const SUPABASE_URL = "https://ktikioeudhiijtfcycwc.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_8ESqBa375RwiYoPnjYB6EA_pN47snAS";
-    const TABLE_URL = SUPABASE_URL + "/rest/v1/demandes_service";
-
-    const form = document.getElementById("service-form");
-    const geoBtn = document.getElementById("geo-btn");
-    const geoStatus = document.getElementById("geo-status");
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const submitLabel = submitBtn.textContent;
-    const successBox = document.getElementById("success-box");
-    let position = null;
-
-    // Localisation GPS (le navigateur demande l'autorisation)
-    geoBtn.addEventListener("click", () => {
-      if (!navigator.geolocation) {
-        geoStatus.textContent = "Géolocalisation non disponible sur cet appareil. Indiquez votre adresse.";
-        geoStatus.classList.add("error");
-        return;
-      }
-      geoStatus.classList.remove("error");
-      geoStatus.textContent = "Recherche de votre position...";
-
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          position = {
-            lat: pos.coords.latitude.toFixed(6),
-            lng: pos.coords.longitude.toFixed(6)
-          };
-          geoStatus.textContent = "✅ Position enregistrée.";
-        },
-        () => {
-          position = null;
-          geoStatus.textContent = "Localisation refusée ou indisponible. Indiquez votre adresse ci-dessus.";
-          geoStatus.classList.add("error");
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-      );
-    });
-
-    // Envoi de la demande vers la base Supabase
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const get = (id) => document.getElementById(id).value.trim();
-      const nom = get("nom");
-      const telephone = get("telephone");
-      const email = get("email");
-      const services = Array.from(document.querySelectorAll('input[name="service"]:checked'))
-        .map((box) => box.value);
-      const date = get("date");
-      const adresse = get("adresse");
-      const description = get("description");
-
-      if (!nom || !telephone || services.length === 0 || !description) {
-        alert("Merci de remplir les champs obligatoires (*), et de cocher au moins un service.");
-        return;
-      }
-      if (!position && !adresse) {
-        alert("Merci de partager votre position GPS ou d'indiquer votre adresse.");
-        return;
-      }
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Envoi en cours...";
-
-      const payload = {
-        nom: nom,
-        telephone: telephone,
-        email: email || null,
-        service: services.join(", "),
-        date_souhaitee: date || null,
-        adresse: adresse || null,
-        latitude: position ? parseFloat(position.lat) : null,
-        longitude: position ? parseFloat(position.lng) : null,
-        description: description,
-        statut: "nouvelle"
-      };
-
-      try {
-        const res = await fetch(TABLE_URL, {
-          method: "POST",
-          headers: {
-            "apikey": SUPABASE_KEY,
-            "Authorization": "Bearer " + SUPABASE_KEY,
-            "Content-Type": "application/json",
-            "Prefer": "return=minimal"
-          },
-          body: JSON.stringify(payload)
-        });
-        if (!res.ok) throw new Error("HTTP " + res.status);
-
-        form.hidden = true;
-        successBox.hidden = false;
-        successBox.scrollIntoView({ behavior: "smooth", block: "center" });
-      } catch (err) {
-        console.error("Enregistrement impossible :", err);
-        alert("Votre demande n'a pas pu être envoyée. Merci de réessayer ou de nous contacter sur WhatsApp.");
-        submitBtn.disabled = false;
-        submitBtn.textContent = submitLabel;
-      }
-    });
-  </script>
 </body>
 </html>
